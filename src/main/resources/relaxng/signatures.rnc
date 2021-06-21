@@ -1,0 +1,90 @@
+
+Signatures = element hcontainer {
+	attribute name { 'signatures' },
+    DeprecatedIdAttributes,
+	Intro?,
+	SignatureBlock+
+}
+
+SignatureBlock = element hcontainer {
+	attribute name { 'signatureBlock' },
+    DeprecatedIdAttributes,
+    element content {
+        P*,
+        Seal?,
+        SigneeName+,
+        ( SigneeRole | SignatureOrganization | SignatureLocation | SignatureDate)*
+    }
+}
+
+Seal = element block {
+    DeprecatedIdAttributes,
+    attribute name { 'seal' },
+    (   Img |
+        element date {
+            attribute date { xsd:date | xsd:dateTime }
+        } |
+        element marker { attribute name { 'seal' } } |
+        '(L.S.)'
+    )
+}
+
+SigneeName = element block {
+    DeprecatedIdAttributes,
+    attribute name { 'signature' },
+    element signature {
+        attribute refersTo { xsd:anyURI },
+        text
+    }
+}
+
+SigneeRole = element block {
+    DeprecatedIdAttributes,
+    attribute name { 'role' },
+    element role {
+        attribute refersTo { xsd:anyURI },
+        text
+    }
+}
+
+SignatureAddressBlock = element blockContainer {
+    DeprecatedIdAttributes,
+    attribute class { 'address' },
+    SignatureAddressLine+
+}
+
+SignatureAddressLine = element p {
+    element location {
+        attribute refersTo { xsd:anyURI },
+        text
+    }
+}
+
+SignatureLocation = element block {
+    DeprecatedIdAttributes,
+    attribute name { 'location' },
+    element location {
+        attribute refersTo { xsd:anyURI },
+        text
+    }
+}
+
+SignatureDate = element block {
+    DeprecatedIdAttributes,
+    attribute name { 'date' },
+    element date {
+        attribute date { xsd:date | xsd:dateTime },
+        text
+    }
+}
+
+SignatureOrganization = element block {
+    DeprecatedIdAttributes,
+    attribute name { 'organization' },
+    element organization {
+        attribute refersTo { xsd:anyURI },
+        text
+    }
+}
+
+

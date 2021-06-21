@@ -1,0 +1,137 @@
+
+SecondaryPreface = element preface {
+    DeprecatedIdAttributes,
+	CorrectionRubric*,
+	ProceduralRubric*,
+	Banner,
+	DocumentNumber,
+	Subjects,
+	DocumentTitle,
+	Approval?,
+	Dates
+}
+
+CorrectionRubric = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'correctionRubric' },
+    text
+}
+
+ProceduralRubric = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'proceduralRubric' },
+    text
+}
+
+Banner = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'banner' },
+    text
+}
+
+Subjects = element container {
+    DeprecatedIdAttributes,
+	attribute name { 'subjects' },
+	Subject+
+}
+
+Subject = element container {
+    DeprecatedIdAttributes,
+	attribute name { 'subject' },
+	SubjectTitle,
+	Subsubject*
+}
+
+SubjectTitle = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'subject' },
+	element concept {
+		attribute refersTo { xsd:anyURI },
+    	DeprecatedClassAttribute,
+		text
+	}
+}
+
+Subsubject = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'subsubject' },
+	element concept {
+		attribute refersTo { xsd:anyURI },
+		DeprecatedClassAttribute,
+		text
+	}
+}
+
+Approval = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'approval' },
+    text
+}
+
+Dates = element container {
+    DeprecatedIdAttributes,
+	attribute name { 'dates' },
+	LaidInDraft?,
+    ( SiftedDate | MadeDate | LaidDate | CommenceDate )+
+}
+
+SecondaryDateInternal = (
+    DeprecatedIdAttributes,
+    element span { text },
+	DocDate
+)
+
+LaidInDraft = element block {
+	attribute name { 'laidInDraft' },
+	SecondaryDateInternal
+}
+
+SiftedDate = element block {
+	attribute name { 'siftedDate' },
+	SecondaryDateInternal
+}
+
+MadeDate = element block {
+	attribute name { 'madeDate' },
+	SecondaryDateInternal
+}
+
+LaidDate = element block {
+	attribute name { 'laidDate' },
+	DeprecatedIdAttributes,
+    element span { text },
+	DocDate?
+}
+
+CommenceDate = element block {
+	attribute name { 'commenceDate' },
+    DeprecatedIdAttributes,
+    element span { text },
+	DocDate?
+}
+
+SecondaryPreamble = element preamble {
+    DeprecatedIdAttributes,
+    RoyalPresence?,
+	(P | PreambleLevel | BlockList )*,
+	EnactingText
+}
+
+RoyalPresence = element container {
+    DeprecatedIdAttributes,
+    attribute name { 'royalPresence' },
+    P+
+}
+
+PreambleLevel = element blockContainer {
+    DeprecatedIdAttributes,
+    attribute class { text }?,
+    Num?,
+    ( P | PreambleLevel )+
+}
+
+EnactingText = element formula {
+    DeprecatedIdAttributes,
+	attribute name { 'enactingText' },
+	( P | BlockList )+
+}

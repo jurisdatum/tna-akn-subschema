@@ -1,0 +1,80 @@
+
+namespace math = "http://www.w3.org/1998/Math/MathML"
+
+AnyBlock = P | BlockList | Tabular | Figure | Formula | Form | BlockDefinition
+
+Blocks = AnyBlock+
+
+P = element p {
+    InlineContent | Mod
+}
+
+
+# lists
+
+BlockList = element blockList {
+    attribute class { text }?,
+	ListItem+
+}
+
+ListItem = element item {
+    Num?,
+    Heading?,
+	( P | BlockList | Formula | BlockDivision )+
+}
+
+
+# images
+
+Figure = element tblock {
+    IdAttributes,
+	attribute class { 'figure' },
+	Num?,
+	Heading?,
+	element p { Img }
+}
+
+
+#math
+
+Formula = element tblock {
+    attribute class { 'formula' },
+    element foreign {
+        element math:math {
+            attribute * { text }*,
+            anyElement+
+        }
+    },
+    WhereClauses?
+}
+
+WhereClauses = element blockContainer {
+    attribute class { 'where' },
+    Blocks
+}
+
+InlineFormula = element subFlow {
+    attribute name { 'formula' },
+    element foreign {
+        element math:math {
+            attribute * { text }*,
+            anyElement+
+        }
+    }
+}
+
+# definitions in block context
+
+BlockDefinition = element tblock {
+    attribute class { 'definition' },
+    Blocks
+}
+
+# forms
+
+Form = element tblock {
+    attribute class { 'form' },
+	Num?,
+	Heading*,
+	Figure+
+}

@@ -1,0 +1,118 @@
+
+namespace uk = "https://www.legislation.gov.uk/namespaces/UK-AKN"
+namespace ukl = "http://www.legislation.gov.uk/namespaces/legislation"
+
+BlockContent = InlineContent
+
+InlineWithoutMod = text | AuthorialNote | EmbeddedStructure | Ref | Rref | NoteRef | Def | Term | Abbr | Italics | Bold | Underline | Sub | Sup | SmallCaps | Uppercase | DropCap |
+    Img | Link | InlineFormula | Date
+
+InlineContent = InlineWithoutMod*
+
+AuthorialNote = element authorialNote {
+    IdAttributes,
+    attribute marker { text }?,
+    attribute class { text }?,
+    Blocks
+}
+
+ReferenceNote = element authorialNote {
+    DeprecatedIdAttributes,
+    attribute class { 'referenceNote' },
+    attribute marker { text }?,
+    Blocks
+}
+
+Ref = element ref {
+    IdAttributes,
+    attribute href { xsd:anyURI },
+    InlineContent
+}
+
+Rref = element rref {
+    IdAttributes,
+    attribute from { text },
+    attribute upTo { text },
+    InlineContent
+}
+
+NoteRef = element noteRef {
+    DeprecatedIdAttributes,
+    attribute href { xsd:anyURI },
+    attribute marker { text }?,
+    attribute class { 'footnote' | 'commentary' }?
+}
+
+Def = element def {
+    DeprecatedIdAttributes,
+    text
+}
+
+Term = element term {
+    IdAttributes,
+    attribute refersTo { xsd:anyURI },
+    text
+}
+
+Abbr = element abbr {
+    attribute class { 'acronym' }?,
+    attribute title { text }?,
+    attribute xml:lang { text }?,
+    text
+}
+
+Italics = element i {
+    InlineContent
+}
+
+Bold = element b {
+    InlineContent
+}
+
+Underline = element u {
+    InlineContent
+}
+
+Sub = element sub {
+    InlineContent
+}
+
+Sup = element sup {
+    InlineContent
+}
+
+SmallCaps = element inline {
+    attribute name { 'smallCaps' },
+    InlineContent
+}
+
+Uppercase = element inline {
+    attribute name { 'uppercase' },
+    InlineContent
+}
+
+DropCap = element inline {
+    attribute name { 'dropCap' },
+    InlineContent
+}
+
+Img = element img {
+    DeprecatedIdAttributes,
+    attribute src { text },
+    attribute width { text }?,
+    attribute height { text }?,
+    attribute alt { text }?,
+    attribute ukl:Width { text }?,
+    attribute ukl:Height { text }?
+}
+
+Link = element a {
+    attribute href { xsd:anyURI },
+    InlineContent
+}
+
+
+Date = element date {
+    attribute date { xsd:date | xsd:dateTime },
+    xsd:normalizedString { minLength = '1' }
+}

@@ -1,0 +1,263 @@
+
+namespace uk = "https://www.legislation.gov.uk/namespaces/UK-AKN"
+
+EURetained = element act {
+	attribute name { 'eur' | 'eudn' | 'eudr' },
+	attribute contains { 'originalVersion' }?,
+	EUMetadata,
+	EUPreface,
+	EUPreamble?,
+	EUBody
+}
+
+EUMetadata = element meta {
+    anyElement+
+}
+
+EUPreface = element preface {
+    LongTitle
+}
+
+EUPreamble = element preamble {
+    ( P | EUPreambleDivision )+
+}
+
+EUPreambleDivision = element blockContainer {
+    attribute uk:name { 'division' },
+    Num,
+    Heading?,
+    ( EUPreambleDivision | P | BlockList )+
+}
+
+
+EUBody = element body {
+    ( EUPart+ | EUChapter+ | EUArticle+ ),
+    Signatures?,
+    EUAttachments?,
+	EUAnnexes?,
+    EUAttachments?
+}
+
+EUStructuralElements = ( EUPart+ | EUTitle+ | EUChapter+ | EUSection+ | EUSubsection+ | EUArticle+ | EUParagraph+ )
+
+
+EUPart = element part {
+    IdAttributes,
+    attribute class { 'group2' }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, ( EUTitle+ | EUChapter+ | EUArticle+ ), WrapUp? )
+    )
+}
+
+EUTitle = element title {
+    IdAttributes,
+    attribute class { 'group3' }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, ( EUChapter+ | EUArticle+ ), WrapUp? )
+    )
+}
+
+EUChapter = element chapter {
+    IdAttributes,
+    attribute class { 'group4' }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, ( EUSection+ | EUArticle+ ), WrapUp? )
+    )
+}
+
+EUSection = element section {
+    IdAttributes,
+    attribute class { 'group5' }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, ( EUSubsection+ | EUArticle+ ), WrapUp? )
+    )
+}
+
+EUSubsection = element subsection {
+    IdAttributes,
+    attribute class { 'group6' }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, EUArticle+, WrapUp? )
+    )
+}
+
+EUArticle = element article {
+    IdAttributes,
+    attribute class { 'prov1' }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, EUParagraph+, WrapUp? )
+    )
+}
+
+EUParagraph = element paragraph {
+    IdAttributes,
+    attribute class { 'prov2' }?,
+	Num,
+    (   Content |
+        ( Intro?, ( P3+ | P3Wrapper1+ ), WrapUp? )
+    )
+}
+
+Division = element hcontainer {
+    IdAttributes,
+    attribute name { 'division' },
+    attribute class { 'eupart' | 'euchapter' | 'annex' | 'annotation' | 'annotations' }?,
+    Num?,
+    Heading?,
+	(   Content |
+		EmptyContent |
+		( Intro?, ( Division+ | DivisionWrapper+ ), WrapUp? )
+	)
+}
+
+DivisionWrapper = element hcontainer {
+    attribute name { 'wrapper2' },
+    Intro?,
+    Division+,
+    WrapUp?
+}
+
+BlockDivision = element blockContainer {
+    IdAttributes,
+    attribute uk:name { 'division' },
+    Num?,
+    Heading?,
+    Blocks
+}
+
+EmptyContent = element content { P* }
+
+
+# annexes
+
+EUAnnexes = element hcontainer {
+    IdAttributes,
+    attribute name { 'schedules' },
+    EUAnnex+
+}
+
+EUAnnex = element hcontainer {
+    IdAttributes,
+    attribute name { 'schedule' | 'annex' },
+	Num,
+	Heading?,
+	(   EUAnnexBody |
+		( EUAnnexBodyWrapper, EUAppendix+ )
+	)
+}
+
+EUAnnexBody = (
+    Content |
+	( Intro?, ( EUAnnexTitle | EUAnnexPart | EUAnnexSection | Division | DivisionWrapper )+, WrapUp? )
+)
+
+EUAnnexBodyWrapper = element hcontainer {
+    IdAttributes,
+    attribute name { 'scheduleBody' | 'annexBody' },
+    EUAnnexBody
+}
+
+EUAnnexTitle = element title {
+    IdAttributes,
+    attribute class { text }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, ( EUAnnexPart+ | EUAnnexSection+ | Division+ ), WrapUp? )
+    )
+}
+# parts within title: eur/2019/6/annex/ii/title/i
+
+EUAnnexPart = element part {
+    IdAttributes,
+    attribute class { text }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, ( EUAnnexSection+ | EUAnnexChapter+ | Division+ ), WrapUp? )
+    )
+}
+
+EUAnnexChapter = element chapter {
+    IdAttributes,
+    attribute class { text }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, ( EUAnnexSection+ | Division+ ), WrapUp? )
+    )
+}
+
+EUAnnexSection = element section {
+    IdAttributes,
+    attribute class { text }?,
+	Num,
+	Heading?,
+    (   Content |
+        ( Intro?, ( Division+ ), WrapUp? )
+    )
+}
+
+
+# appendices
+
+EUAppendix = element hcontainer {
+    IdAttributes,
+	attribute name { 'appendix' },
+	Num,
+	Heading?,
+	(   EUAnnexBody |
+		( EUAppendixBodyWrapper, EUAppendix+ )
+	)
+}
+
+EUAppendixBodyWrapper = element hcontainer {
+    IdAttributes,
+    attribute name { 'appendixBody' },
+    EUAnnexBody
+}
+
+
+# attachments
+
+EUAttachments = element hcontainer {
+    IdAttributes,
+    attribute name { 'attachments' },
+    EUAttachment+
+}
+
+EUAttachment = element hcontainer {
+    IdAttributes,
+    attribute name { 'attachment' },
+    element content {
+        element p {
+            element subFlow {
+                attribute name { 'euretained' },
+                element container {
+                    attribute name { 'preface' },
+                    anyElement+
+                },
+                element container {
+                    attribute name { 'preamble' },
+                    anyElement+
+                }?,
+                element hcontainer {
+                    attribute name { 'body' },
+                    anyElement+
+                }
+            }
+        }
+    }
+}

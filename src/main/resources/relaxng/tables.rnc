@@ -1,0 +1,63 @@
+
+namespace akn = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+namespace html = "http://www.w3.org/1999/xhtml"
+
+Tabular = element tblock {
+    IdAttributes,
+	attribute class { 'table' },
+	Num?,
+	( Heading, Subheading? )?,
+	ForeignTableWrapper
+}
+
+ForeignTableWrapper = element foreign {
+	Table
+}
+
+Table = element html:table {
+    attribute class { text }?,
+    ( HTMLColgroup | HTMLCol+ )?,
+    THead?,
+    TBody
+}
+
+HTMLColgroup = element html:colgroup {
+    attribute span { xsd:positiveInteger } | HTMLCol+
+}
+
+HTMLCol = element html:col {
+    attribute span { xsd:positiveInteger }?,
+    attribute style { text }?
+}
+
+THead = element html:thead {
+    DeprecatedClassAttribute,
+    Row+
+}
+
+TBody = element html:tbody {
+    DeprecatedClassAttribute,
+    Row+
+}
+
+Row = element html:tr {
+    attribute akn:eId { text }?,
+    attribute akn:GUID { text }?,
+    ( HeaderCell+ | Cell+ )
+}
+
+HeaderCell = element html:th {
+    attribute colspan { xsd:integer }?,
+    attribute rowspan { xsd:integer }?,
+    attribute class { text }?,
+    attribute style { text }?,
+    InlineContent
+}
+
+Cell = element html:td {
+    attribute colspan { xsd:integer }?,
+    attribute rowspan { xsd:integer }?,
+    attribute class { text }?,
+    attribute style { text }?,
+    ( Blocks | InlineContent | PrimaryStructuralElements | SecondaryStructuralElements | P3 )
+}

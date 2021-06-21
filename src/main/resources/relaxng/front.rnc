@@ -1,0 +1,33 @@
+
+CoverPage = element coverPage {
+    DeprecatedIdAttributes,
+	anyElement+
+}
+
+DocumentTitle = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'title' },
+	DocTitle
+}
+
+DocumentNumber = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'number' },
+	DocNumber
+}
+
+DocNumber = element docNumber {
+    DeprecatedIdAttributes,
+    text
+}
+
+DocTitle = element docTitle {
+    DeprecatedIdAttributes,
+    text
+}
+
+DocDate = element docDate {
+    DeprecatedIdAttributes,
+    attribute date { xsd:date | xsd:dateTime },
+    text
+}

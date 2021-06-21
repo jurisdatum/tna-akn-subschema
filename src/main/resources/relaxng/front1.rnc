@@ -1,0 +1,33 @@
+
+PrimaryPreface = element preface {
+    DeprecatedIdAttributes,
+	DocumentTitle,
+	DocumentNumber,
+	LongTitle,
+	DateOfEnactment
+}
+
+ScottishActPreface = element preface {
+    DeprecatedIdAttributes,
+	DocumentTitle,
+	DocumentNumber,
+	DateOfEnactment,
+	LongTitle
+}
+
+LongTitle = element longTitle {
+    DeprecatedIdAttributes,
+	P+
+}
+
+DateOfEnactment = element block {
+    DeprecatedIdAttributes,
+	attribute name { 'dateOfEnactment' },
+	attribute refersTo { text }?,
+	InlineContent
+}
+
+PrimaryPreamble = element preamble {
+    DeprecatedIdAttributes,
+	( ( P*, EnactingText ) | P+ )
+}

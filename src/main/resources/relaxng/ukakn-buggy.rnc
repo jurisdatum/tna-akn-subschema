@@ -1,0 +1,98 @@
+
+default namespace = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+namespace akn = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+namespace uk = "https://www.legislation.gov.uk/namespaces/UK-AKN"
+namespace html = "http://www.w3.org/1999/xhtml"
+namespace bad = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0 ../schemas/akomantoso30.xsd"
+
+include 'ukakn-draft.rnc' {
+
+SecondaryParagraph = element paragraph {
+	IdAttributes,
+	attribute class { 'prov2' }?,
+	Num,
+	(	( Intro?, ( P3+ | P4+ | Definition+ ), WrapUp? ) |
+		Content
+	)
+} | element hcontainer {
+	IdAttributes,
+    attribute name { 'SIParagraph' },
+	attribute class { "prov2" }?,
+	Num,
+	(	( Intro?, ( P3+ | P4+ | Definition+ ), WrapUp? ) |
+		Content
+	)
+}
+
+AppendText = element inline {
+    attribute name { "appendText" | "AppendText" },
+    text
+}
+
+Row = element html:tr {
+    attribute akn:eId { text }?,
+    attribute akn:GUID { text }?,
+    attribute bad:eId { text }?,
+    attribute bad:GUID { text }?,
+    ( HeaderCell+ | Cell+ )
+}
+
+HeaderCell = element html:th {
+    attribute colspan { xsd:integer }?,
+    attribute rowspan { xsd:integer }?,
+    attribute akn:eId { text }?,
+    attribute akn:GUID { text }?,
+    attribute bad:eId { text }?,
+    attribute bad:GUID { text }?,
+    attribute class { text }?,
+    attribute style { text }?,
+    InlineContent
+}
+
+Cell = element html:td {
+    attribute colspan { xsd:integer }?,
+    attribute rowspan { xsd:integer }?,
+    attribute akn:eId { text }?,
+    attribute akn:GUID { text }?,
+    attribute bad:eId { text }?,
+    attribute bad:GUID { text }?,
+    attribute class { text }?,
+    attribute style { text }?,
+    ( Blocks | InlineContent | HTMLP+ )
+}
+
+
+EUArticle = element article {
+    IdAttributes,
+    attribute class { "prov1" | 'EUProv1' }?,
+	Num,
+	Heading?,
+    (   ( Intro?, EUParagraph+, WrapUp? ) |
+        Content
+    )
+}
+
+EUParagraph = element paragraph {
+    IdAttributes,
+    attribute class { "prov2" | 'EUProv2' }?,
+	Num,
+    (   ( Intro?, ( P3+ | P3Wrapper1+ ), WrapUp? ) |
+        Content
+    )
+}
+
+}
+
+HTMLP = element html:p {
+    ( text |
+    element html:b { text } |
+    element akn:b { text } |
+    element html:i { text } |
+    element akn:i { text } |
+    element html:ref {
+        attribute class { text }?,
+        attribute href { xsd:anyURI }?,
+        attribute uk:targetGuid { text }?,
+        text
+    } )*
+}

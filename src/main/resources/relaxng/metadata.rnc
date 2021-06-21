@@ -1,0 +1,56 @@
+
+Metadata = element meta {
+	anyElement+
+}
+
+anyElement = element * {
+	(attribute * { text }
+	| text
+	| anyElement)*
+}
+
+CoreProperties = (
+	element FRBRthis { ValueAttributes },
+	element FRBRuri { ValueAttributes }+,
+	element FRBRalias { ValueAttributes, attribute name { xsd:string } }*,
+	element FRBRdate {
+		attribute date { xsd:date | xsd:dateTime },
+		attribute name { xsd:string }
+	}+,
+	element FRBRauthor {
+		attribute href { xsd:anyURI }
+	}+
+)
+
+ValueAttributes = (
+	attribute value { xsd:string },
+	attribute refersTo { xsd:anyURI }?,
+	attribute showAs { xsd:string }?,
+	attribute shortForm { xsd:string }?
+)
+
+Identification = element identification {
+	attribute source { xsd:anyURI },
+	element FRBRWork {
+		CoreProperties,
+		element FRBRcountry { ValueAttributes },
+		element FRBRsubtype { ValueAttributes }?,
+		element FRBRnumber { ValueAttributes }*,
+		element FRBRname { ValueAttributes }*,
+		element FRBRprescriptive { attribute value { xsd:boolean } }?,
+		element FRBRauthoritative { attribute value { xsd:boolean } }?
+	},
+	element FRBRExpression {
+		CoreProperties,
+		element FRBRversionNumber { ValueAttributes }?,
+		element FRBRauthoritative { attribute value { xsd:boolean } }?,
+		element FRBRmasterExpression { attribute href { xsd:anyURI }, attribute showAs { xsd:string }? }?,
+		element FRBRlanguage { attribute language { xsd:string } }+
+		# element FRBRtranslation {  }*
+	},
+	element FRBRManifestation {
+		CoreProperties,
+		# element FRBRportion {  }?,
+		element FRBRformat { ValueAttributes }?
+	}
+}

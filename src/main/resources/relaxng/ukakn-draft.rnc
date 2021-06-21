@@ -1,0 +1,139 @@
+
+default namespace = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+namespace akn = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+namespace uk = "https://www.legislation.gov.uk/namespaces/UK-AKN"
+namespace html = "http://www.w3.org/1999/xhtml"
+
+
+include 'ukakn-strict.rnc' {
+
+DeprecatedIdAttributes = IdAttributes
+
+DeprecatedClassAttribute = attribute class { text }
+
+DocNumber = element docNumber {
+    DeprecatedIdAttributes,
+    ( text | Placeholder+ )
+}
+
+DocTitle = element docTitle {
+    DeprecatedIdAttributes,
+    ( text | Placeholder )
+}
+
+DocDate = element docDate {
+    DeprecatedIdAttributes,
+    attribute class { 'assentDate' }?,
+    attribute date { xsd:date | xsd:dateTime },
+    ( text | ( text?, Placeholder, text? ) )
+}
+
+DeprecatedNumAttributes = (
+    DeprecatedIdAttributes,
+    attribute uk:autonumber { 'yes' | 'no' }?
+)
+
+QuotedStructureAttributes = (
+    IdAttributes,
+    StartQuote?,
+    EndQuote?,
+    attribute uk:docName { DocType }?,
+    attribute uk:context { 'body' | 'schedule' }?,
+    attribute uk:indent { xsd:string { pattern = 'indent\d' } }?
+)
+
+QuotedStructureInternal = (
+    QuotedStructureAttributes,
+    (
+        PrimaryStructuralElements |
+        SecondaryStructuralElements |
+        ScheduleStructuralElements |
+        P3+ |
+        P4+ |
+        P5+ |
+        Definition+ |
+        P+ |
+        BlockList |
+        Tabular |
+        EUStructuralElements |
+        Intro | Content | WrapUp
+    )
+)
+
+Table = element html:table {
+    attribute class { text }?,
+    attribute cols { xsd:integer }?,
+    ( HTMLColgroup | HTMLCol+ )?,
+    THead?,
+    TBody
+}
+
+HTMLCol = element html:col {
+    attribute span { xsd:positiveInteger }?,
+    attribute style { text }?,
+    attribute width { text }?
+}
+
+HeaderCell = element html:th {
+    attribute colspan { xsd:integer }?,
+    attribute rowspan { xsd:integer }?,
+    attribute akn:eId { text }?,
+    attribute akn:GUID { text }?,
+    attribute class { text }?,
+    attribute style { text }?,
+    InlineContent
+}
+
+Cell = element html:td {
+    attribute colspan { xsd:integer }?,
+    attribute rowspan { xsd:integer }?,
+    attribute akn:eId { text }?,
+    attribute akn:GUID { text }?,
+    attribute class { text }?,
+    attribute style { text }?,
+    ( Blocks | InlineContent | PrimaryStructuralElements | SecondaryStructuralElements | P3 )
+}
+
+
+Ref = Placeholder | OtherRef
+
+Rref = element rref {
+    IdAttributes,
+    attribute from { text },
+    attribute upTo { text },
+    attribute uk:fromGuid { text }?,    # should GUID be capitalized
+    attribute uk:upToGuid { text }?,    # should GUID be capitalized
+    InlineContent
+}
+
+Def = element def {
+    IdAttributes,
+    attribute uk:startQuote { text }?,
+    attribute uk:endQuote { text }?,
+    InlineContent
+}
+
+Date = element date {
+    attribute date { xsd:date | xsd:dateTime },
+    ( xsd:normalizedString { minLength = '1' } | Placeholder )
+}
+
+}
+
+Placeholder = element ref {
+    IdAttributes,
+    attribute href { xsd:anyURI },
+    attribute class { 'placeholder' }?,
+    (
+        ( attribute uk:dateFormat { xsd:string { minLength = '10' } }, xsd:string { minLength = '10' } ) | empty
+    )
+}
+
+OtherRef = element ref {
+    IdAttributes,
+    attribute href { xsd:anyURI },
+    attribute class { 'valid' | 'invalid' | 'ignore' }?,
+    attribute uk:targetGuid { xsd:token }?,
+    attribute uk:targetJref { text }?,
+    InlineContent
+}

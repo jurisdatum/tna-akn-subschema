@@ -1,0 +1,37 @@
+
+default namespace = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+namespace xsi = "http://www.w3.org/2001/XMLSchema-instance"
+
+include "global.rnc"
+
+include "metadata.rnc"
+
+include "primary.rnc"
+include "front.rnc"
+include "front1.rnc"
+include "body.rnc"
+include "body1.rnc"
+
+include "secondary.rnc"
+include "front2.rnc"
+include "body2.rnc"
+include "signatures.rnc"
+include "explanatory.rnc"
+
+include "eu.rnc"
+
+include "blocks.rnc"
+include "tables.rnc"
+include "amendments.rnc"
+include "inline.rnc"
+
+include "schedules.rnc"
+
+start = AkomaNtoso
+
+AkomaNtoso = element akomaNtoso {
+	attribute xsi:schemaLocation { text }?,
+	Document
+}
+
+Document = ( Primary | Secondary )

@@ -1,0 +1,102 @@
+
+SecondaryBody = element body {
+	( SecondaryGroupOfParts+ | SecondaryPart+ | SecondaryChapter+ | SecondarySection+ | SecondaryCrossHeading+ | SecondaryP1s ),
+	Signatures,
+	Schedules?
+}
+
+SecondaryStructuralElement = ( SecondaryGroupOfParts | SecondaryPart | SecondaryChapter | SecondarySection | SecondarySubsection | SecondaryCrossHeading | SecondarySubHeading | Article | Regulation | Rule | SecondaryParagraph )
+
+SecondaryStructuralElements = ( SecondaryGroupOfParts+ | SecondaryPart+ | SecondaryChapter+ | SecondarySection+ | SecondarySubsection+ | SecondaryCrossHeading+ | SecondarySubHeading+ | Article+ | Regulation+ | Rule+ | SecondaryParagraph+ )
+
+SecondaryGroupOfParts = element hcontainer {
+	IdAttributes,
+	attribute name { 'groupOfParts' },
+	attribute class { 'group1' }?,
+	SecondaryPart+
+}
+
+SecondaryPart = element part {
+	IdAttributes,
+	attribute class { 'group2' }?,
+	Num,
+	Heading,
+	( SecondaryChapter+ | SecondarySection+ | SecondaryCrossHeading+ | SecondaryP1s )
+}
+
+SecondaryChapter = element chapter {
+	IdAttributes,
+	attribute class { 'group4' }?,
+	(( Num, Heading? ) | Heading ),
+	( SecondarySection+ | SecondaryCrossHeading+ | SecondaryP1s )
+}
+
+# do we need to require the Num? If no <num>, should it be a <hcontainer name="crossheading">
+SecondarySection = element section {
+	IdAttributes,
+	attribute class { 'group5' },
+	Num,
+	Heading,
+	( SecondarySubsection+ | SecondaryCrossHeading+ | SecondaryP1s )
+}
+
+SecondarySubsection = element subsection {
+	IdAttributes,
+	attribute class { 'group6' },
+	Num,
+	Heading,
+	( SecondaryCrossHeading+ | SecondaryP1s )
+}
+
+SecondaryCrossHeading = element hcontainer {
+	attribute name { 'crossheading' },
+	IdAttributes,
+	attribute class { 'group7' }?,
+	Heading,
+	( SecondarySubHeading+ | SecondaryP1s )
+}
+
+SecondarySubHeading = element hcontainer {
+	attribute name { 'subheading' },
+	IdAttributes,
+	attribute class { 'group8' }?,
+	Heading,
+	SecondaryP1s
+}
+
+# P1s
+
+SecondaryP1s = ( Article+ | Regulation+ | Rule+ )
+
+SecondaryP1Internal = (
+	IdAttributes,
+	attribute class { 'prov1' }?,
+	( ( Num, Heading? ) | ( Heading, Num ) ),
+    (   Content |
+        ( Intro?, ( SecondaryParagraph+ | P3+ | P4+ | Definition+ ), WrapUp? )
+	)
+)
+
+Article = element article {
+	SecondaryP1Internal
+}
+
+Regulation = element hcontainer {
+	attribute name { 'regulation' },
+	SecondaryP1Internal
+}
+
+Rule = element rule {
+	SecondaryP1Internal
+}
+
+#P2s
+
+SecondaryParagraph = element paragraph {
+	IdAttributes,
+	attribute class { 'prov2' }?,
+	Num,
+	(   Content |
+	    ( Intro?, ( P3+ | P4+ | Definition+ ), WrapUp? )
+	)
+}

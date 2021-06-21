@@ -1,0 +1,224 @@
+
+default namespace = "http://docs.oasis-open.org/legaldocml/ns/akn/3.0"
+namespace uk = "https://www.legislation.gov.uk/namespaces/UK-AKN"
+namespace ukl = "http://www.legislation.gov.uk/namespaces/legislation"
+
+include 'ukakn-strict.rnc' {
+
+Subject = element container {
+	attribute name { 'subject' },
+	SubjectTitle+,	# this seems strange, but CLML requires it
+	Subsubject*
+}
+
+BlockList = element blockList {
+    attribute class { text }?,
+    attribute ukl:Name { text }?,
+    attribute ukl:Type { text }?,
+    attribute ukl:Decoration { text }?,
+	ListItem+
+}
+
+ListItem = element item {
+    Num?,
+    Heading?,
+	( P | BlockList | Formula | UKLBlockText | BlockDivision )+
+}
+
+PrimaryCrossHeading = element hcontainer {
+	attribute name { 'crossheading' },
+	IdAttributes,
+	attribute ukl:Name { 'Pblock' | 'P1group' }?,
+	attribute class { 'group7' }?,
+	Heading,
+	( PrimarySubHeading+ | PrimarySection+ )
+}
+
+PrimarySection = element section {
+	IdAttributes,
+    attribute class { 'prov1' }?,
+	attribute alternativeTo { xsd:anyURI }?,
+	attribute ukl:Description { text }?,	# for alt versions
+	( ( Num, Heading? ) | ( Heading, Num ) ),
+	( Content | ( Intro?, ( PrimarySubsectionGroup+ | PrimarySubsection+ | P3+ | Definition+ ), WrapUp? ))
+}
+
+PrimarySubsection = element subsection {
+	IdAttributes,
+    attribute class { 'prov2' }?,
+    element num {
+		xsd:string { pattern = "\((\d+[A-Z]*|[A-Z]\d+)\)" }
+	},
+	( Content | ( Intro?, ( PrimaryWrapper+ | P3+ | Definition+ ), WrapUp? ))
+}
+
+SecondaryCrossHeading = element hcontainer {
+	IdAttributes,
+	attribute name { 'crossheading' },
+	attribute class { 'group7' }?,
+	attribute ukl:Name { 'Pblock' | 'P1group' }?,
+	Heading,
+	( SecondarySubHeading+ | SecondaryP1s )
+}
+
+SecondaryP1Internal = (
+	IdAttributes,
+	attribute class { "prov1" }?,
+	( ( Num, Heading? ) | ( Heading, Num ) ),
+    ( ( Intro?, ( SecondaryParagraph+ | P3+ | P4+ | Definition+ | SecondaryP2Wrapper1+ | SecondaryP2Wrapper2+ ), WrapUp? ) | Content )
+)
+
+ScheduleCrossHeading = element hcontainer {
+	IdAttributes,
+	attribute name { 'crossheading' },
+	attribute class { 'schGroup7' }?,
+	attribute ukl:Name { 'Pblock' | 'P1group' }?,
+	Heading,
+	( ScheduleSubHeading+ | ScheduleParagraph+ )
+}
+
+Tabular = element tblock {
+    IdAttributes,
+	attribute class { 'table' },
+	attribute ukl:Orientation { 'portrait' | 'landscape' }?,
+	Num?,
+	( Heading, Subheading? )?,
+	ForeignTableWrapper
+}
+
+AnyBlock &= KeyList
+
+Figure = element tblock {
+    IdAttributes,
+	attribute class { 'figure' | 'image' },
+	attribute ukl:Orientation { 'portrait' | 'landscape' }?,
+	attribute ukl:ImageLayout { 'vertical' | 'horizontal' | 'matrix-2-wide' | 'matrix-3-wide' | 'matrix-4-wide' | 'matrix-5-wide' }?,
+	Num?,
+	Heading?,
+	element p { Img }
+}
+
+Def = element def {
+    IdAttributes,
+    attribute ukl:Name { 'Definition' }?,
+    attribute ukl:TermRef { xsd:NCName }?,
+    InlineContent
+}
+
+Signatures = element hcontainer {
+    DeprecatedIdAttributes,
+	attribute name { 'signatures' },
+	( ( Intro?, SignatureBlock+ ) | RepealedSignatures )
+}
+
+Schedule = element hcontainer {
+	IdAttributes,
+	attribute name { 'schedule' },
+	Num,
+	Heading?,
+	(	ScheduleBody |
+		( ScheduleBodyWrapper, Appendix+ )
+	)
+}
+
+}
+
+# wrappers
+
+PrimarySubsectionGroup = element hcontainer {
+	IdAttributes,
+    attribute name { "P2group" },
+    Heading,
+	PrimarySubsection+
+}
+
+PrimaryWrapper = element hcontainer {
+    attribute name { 'wrapper1' | 'wrapper2' },
+    Intro?,
+    ( P3+ | P4+ ),
+    WrapUp?
+}
+
+SecondaryP2Wrapper1 = element hcontainer {
+    attribute name { "wrapper1" },
+    Intro?,
+    ( SecondaryParagraph+ | P3+ | P4+ ),	# Definition+ ?
+    WrapUp?
+}
+
+SecondaryP2Wrapper2 = element hcontainer {
+    attribute name { "wrapper2" },
+    Intro?,
+    ( SecondaryParagraph+ | P3+ | P4+ ),	# Definition+ ?
+    WrapUp?
+}
+
+QuotedStructureAttributes &= (
+    attribute ukl:TargetClass { "primary" | "secondary" | "euretained" | "unknown" }?,
+    attribute ukl:TargetSubClass { "order" | "regulation" | "rule" | "scheme" | "resolution" | "unknown" }?,
+    attribute ukl:Context { "main" | "schedule" | "unknown" }?,
+    attribute ukl:Format { "default" | "double" | "single" | "none" }?
+)
+
+
+ScheduleBodyWrapper = element hcontainer { IdAttributes,
+    attribute name { 'scheduleBody' },
+    ScheduleBody
+}
+
+UKLBlockText = element blockContainer {
+    attribute ukl:Name { 'BlockText' },
+    Blocks
+}
+
+KeyList = element blockList {
+    attribute ukl:Name { 'KeyList' },
+    attribute ukl:Separator { text }*,
+	KeyListItem+
+}
+
+KeyListItem = element item {
+    Heading,
+	( P | BlockList | UKLBlockText )+
+}
+
+# inline
+
+InlineWithoutMod |= Addition | Repeal | Span | Proviso
+
+Proviso = element inline {
+	attribute name { 'proviso' },
+	InlineContent
+}
+
+Span = element span {
+    attribute ukl:Name { 'DotPadding' | 'EmSpace' | 'EnSpace' | 'LinePadding' | 'NonBreakingSpace' | 'Minus' | 'ThinSpace' | 'BoxPadding' }?,
+    InlineContent
+}
+
+
+Addition = element ins {
+    attribute ukl:ChangeId { text },
+    attribute ukl:CommentaryRef { text },
+    attribute class { text }?,
+    InlineContent
+}
+
+Repeal = element del {
+    attribute ukl:ChangeId { text },
+    attribute ukl:CommentaryRef { text },
+    attribute class { text }?,
+    InlineContent
+}
+
+RepealedSignatures = element content {
+    element p {
+        element noteRef {
+            attribute href { text },
+            attribute uk:name { 'commentary' },
+            attribute ukl:Name { 'CommentaryRef' },
+            attribute class { text }?
+        },
+        text
+    }
+}

@@ -1,0 +1,122 @@
+
+Schedules = element hcontainer {
+	attribute name { 'schedules' },
+	DeprecatedIdAttributes,
+	DeprecatedClassAttribute,
+	Heading?,  # 'Schedules'
+	Abstract?,
+	Schedule+,
+	Signatures?
+}
+
+Abstract = element hcontainer {
+    attribute name { 'abstract' },
+    Heading?,
+    Content
+}
+
+ScheduleStructuralElements = ( Schedule+ | SchedulePart+ | ScheduleChapter+ | ScheduleSection+ | ScheduleSubsection+ | ScheduleCrossHeading+ | ScheduleParagraph+ | ScheduleSubparagraph+ )
+
+Schedule = element hcontainer {
+	attribute name { 'schedule' },
+	IdAttributes,
+	DeprecatedClassAttribute,
+	Num,
+	Heading?,
+	ScheduleBody,
+	Appendix*
+}
+
+ScheduleBody = (
+    Content |
+	(  Intro?,
+	#    ScheduleParagraph?, # anaw/2019/2
+	   ( SchedulePart+ | ScheduleChapter+ | ScheduleCrossHeading+ | ScheduleParagraph+ | Definition+ | P3+ | P3Wrapper1+ ),
+	   WrapUp?
+	)
+)
+
+SchedulePart = element part {
+	IdAttributes,
+	attribute class { 'schGroup2' }?,
+	Num,
+	Heading?,
+	(	Content |
+		( Intro?, ( ScheduleChapter+ | ScheduleCrossHeading+ | ScheduleParagraph+ ), WrapUp? )
+	)
+}
+
+ScheduleChapter = element chapter {
+	IdAttributes,
+	attribute class { 'schGroup4' }?,
+	Num,
+	Heading?,
+	(	Content |
+		( Intro?, ( ScheduleSection+ | ScheduleCrossHeading+ | ScheduleParagraph+ ), WrapUp? )
+	)
+}
+
+ScheduleSection = element section {
+	IdAttributes,
+	attribute class { 'schGroup5' }?,
+	Num,
+	Heading?,
+	(	Content |
+		( Intro?, ( ScheduleSubsection+ | ScheduleCrossHeading+ | ScheduleParagraph+ ), WrapUp? )
+	)
+}
+
+ScheduleSubsection = element subsection {
+	IdAttributes,
+	attribute class { 'schGroup6' }?,
+	Num,
+	Heading?,
+	(	Content |
+		( Intro?, ( ScheduleCrossHeading+ | ScheduleParagraph+ ), WrapUp? )
+	)
+}
+
+ScheduleCrossHeading = element hcontainer {
+	IdAttributes,
+	attribute name { 'crossheading' },
+	attribute class { 'schGroup7' }?,
+	Heading,
+	( ScheduleSubHeading+ | ScheduleParagraph+ )
+}
+
+ScheduleSubHeading = element hcontainer {
+	IdAttributes,
+	attribute name { 'subheading' },
+	attribute class { 'schGroup8' }?,
+	Heading,
+	ScheduleParagraph+
+}
+
+# P1s
+
+ScheduleParagraph = element paragraph {
+	IdAttributes,
+	attribute class { 'schProv1' }?,
+	( ( Num, Heading? ) | ( Heading?, Num? ) ),
+	(	Content |
+		( Intro?, ( ScheduleSubparagraph+ | P3+ | P3Wrapper1+ | Definition+ ), WrapUp? )
+	)
+}
+
+ScheduleSubparagraph = element subparagraph { IdAttributes,
+	attribute class { 'schProv2' }?,
+	Num,
+	Heading?,
+	(	Content |
+		( Intro?, ( P3+ | P3Wrapper1+ | Definition+ ), WrapUp? )
+	)
+}
+
+# Appendices
+
+Appendix = element hcontainer { IdAttributes,
+	attribute name { 'appendix' },
+	Num,
+	Heading?,
+	ScheduleBody
+}

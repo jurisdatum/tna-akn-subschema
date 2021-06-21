@@ -1,0 +1,17 @@
+
+Secondary = element act {
+	attribute name { SecondaryDocType | SecondaryDraftDocType },
+	attribute contains { 'originalVersion' }?,
+	Metadata,
+	CoverPage?,
+	SecondaryPreface,
+	SecondaryPreamble,
+	SecondaryBody,
+	Conclusions?
+}
+
+Conclusions = element conclusions {
+	IdAttributes,
+	ExplanatoryNote?,
+	EarlierOrders?
+}

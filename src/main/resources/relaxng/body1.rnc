@@ -1,0 +1,70 @@
+
+PrimaryBody = element body {
+	( PrimaryGroupOfParts+ | PrimaryPart+ | PrimaryChapter+ | PrimaryCrossHeading+ | PrimarySection+ ),
+	Schedules?
+}
+
+PrimaryStructuralElement = ( PrimaryGroupOfParts | PrimaryPart | PrimaryChapter | PrimaryCrossHeading | PrimarySection | PrimarySubsection )
+
+PrimaryStructuralElements = ( PrimaryGroupOfParts+ | PrimaryPart+ | PrimaryChapter+ | PrimaryCrossHeading+ | PrimarySubHeading+ | PrimarySection+ | PrimarySubsection+ )
+
+PrimaryGroupOfParts = element hcontainer {
+	attribute name { 'groupOfParts' },
+	IdAttributes,
+	attribute class { 'group1' }?,
+	PrimaryPart+
+}
+
+PrimaryPart = element part {
+	IdAttributes,
+	attribute class { 'group2' }?,
+	Num,
+	Heading,
+	( PrimaryChapter+ | PrimaryCrossHeading+ | PrimarySection+ )
+}
+
+PrimaryChapter = element chapter {
+	IdAttributes,
+	attribute class { 'group4' }?,
+	Num,
+	Heading,
+	( PrimaryCrossHeading+ | PrimarySection+ )
+}
+
+PrimaryCrossHeading = element hcontainer {
+	attribute name { 'crossheading' },
+	IdAttributes,
+	attribute class { 'group7' }?,
+	Heading,
+	( PrimarySubHeading+ | PrimarySection+ )
+}
+
+PrimarySubHeading = element hcontainer {
+	attribute name { 'subheading' },
+	IdAttributes,
+	attribute class { 'group8' }?,
+	Heading,
+	PrimarySection+
+}
+
+PrimarySection = element section {
+	IdAttributes,
+    attribute class { 'prov1' }?,
+	attribute alternativeTo { xsd:anyURI }?,
+	( ( Num, Heading? ) | ( Heading, Num ) ),
+	(   Content |
+	    ( Intro?, ( PrimarySubsection+ | P3+ | Definition+ ), WrapUp? )
+	)
+}
+
+PrimarySubsection = element subsection {
+	IdAttributes,
+    attribute class { 'prov2' }?,
+    element num {
+		DeprecatedNumAttributes,
+		xsd:string { pattern = '\((\d+[A-Z]*|[A-Z]\d+)\)' }
+	},
+	(   Content |
+	    ( Intro?, ( P3+ | Definition+ ), WrapUp? )
+	)
+}

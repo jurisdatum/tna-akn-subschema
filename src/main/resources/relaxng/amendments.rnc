@@ -1,0 +1,77 @@
+
+namespace uk = "https://www.legislation.gov.uk/namespaces/UK-AKN"
+
+Mod = element mod {
+    (   
+        InlineContent,
+        QuotedText,
+        InlineContent
+    ) | (
+        InlineContent,
+        QuotedText?,
+        QuotedStructure,
+        AppendText?
+    )
+}
+
+StartQuote = attribute startQuote { '“' | '‘' | '"' | "'" | '' }
+
+EndQuote = attribute endQuote { '”' | '’' | '"' | "'" | '' }
+
+QuotedStructureAttributes = (
+    StartQuote?,
+    EndQuote?,
+    DeprecatedIdAttributes,
+    attribute uk:docName { DocType }?,
+    attribute uk:context { 'body' | 'schedule' }?
+)
+
+QuotedStructureInternal = (
+    QuotedStructureAttributes,
+    (
+        PrimaryStructuralElements |
+        SecondaryStructuralElements |
+        ScheduleStructuralElements |
+        P3+ |
+        P4+ |
+        P5+ |
+        Definition+ |
+        P+ |
+        BlockList |
+        Tabular |
+        EUStructuralElements
+    )
+)
+
+QuotedStructure = element quotedStructure {
+    QuotedStructureInternal
+}
+
+AppendText = element inline {
+    attribute name { 'appendText' },
+    text
+}
+
+QuotedText = element quotedText {
+    StartQuote?,
+    EndQuote?,
+    DeprecatedIdAttributes,
+    InlineContent
+}
+
+EmbeddedStructure = element embeddedStructure {
+    StartQuote?,
+    EndQuote?,
+    attribute uk:docName { DocType }?,
+    attribute uk:context { 'body' | 'schedule' }?,
+    DeprecatedIdAttributes,
+    (
+        PrimaryStructuralElement |
+        SecondaryStructuralElement |
+        Schedule+ |
+        ScheduleParagraph+ |
+        ScheduleSubparagraph+ |
+        P3 |
+        Definition
+    )
+}

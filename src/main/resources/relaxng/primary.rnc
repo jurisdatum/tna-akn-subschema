@@ -1,0 +1,21 @@
+
+Primary = ScottishAct | OtherPrimary
+
+ScottishAct = element act {
+	attribute name { 'asp' },
+	attribute contains { 'originalVersion' }?,
+	Metadata,
+	CoverPage?,
+	ScottishActPreface,
+	PrimaryBody
+}
+
+OtherPrimary = element act {
+	attribute name { PrimaryDocType | PrimaryDraftDocType },
+	attribute contains { 'originalVersion' }?,
+	Metadata,
+	CoverPage?,
+	PrimaryPreface,
+	PrimaryPreamble?,
+	PrimaryBody
+}

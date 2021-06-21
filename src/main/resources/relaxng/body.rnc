@@ -1,0 +1,86 @@
+
+DeprecatedNumAttributes = (
+	DeprecatedIdAttributes
+)
+
+Num = element num {
+	DeprecatedNumAttributes,
+	text,
+	ReferenceNote?
+}
+
+Heading = element heading {
+	DeprecatedIdAttributes,
+	InlineContent
+}
+
+Subheading = element subheading {
+	DeprecatedIdAttributes,
+	InlineContent
+}
+
+Intro = element intro {
+	DeprecatedIdAttributes,
+	Blocks
+}
+
+Content = element content {
+	DeprecatedIdAttributes,
+	Blocks
+}
+
+WrapUp = element wrapUp {
+	DeprecatedIdAttributes,
+	Blocks
+}
+
+P3Wrapper1 = element hcontainer {
+    attribute name { 'wrapper1' },
+	(	( Intro?, P3+, WrapUp? ) |
+		Content
+	)
+}
+# can have content if multiple P2paras have P3s, and one does not, e.g., eur/2019/6/adopted
+
+P3 = element level {
+	IdAttributes,
+	attribute class { 'para1' }?,
+    element num { DeprecatedNumAttributes, xsd:string { pattern = '\([a-z]+\)' } },
+	(   Content |
+	    ( Intro?, ( P4+ | Definition+ ), WrapUp? )
+	)
+}
+
+P4 = element level {
+	IdAttributes,
+	attribute class { 'para2' }?,
+    element num { DeprecatedNumAttributes, xsd:string { pattern = '\([a-z]+\)' } },	# \(([ivxlc]+[a-z]?|[a-z][ivxlc]+)\)
+	(   Content |
+	   ( Intro?, P5+, WrapUp? )
+	)
+}
+
+P5 = element level {
+	IdAttributes,
+	attribute class { 'para3' }?,
+	Num,
+	(   Content |
+    	( Intro?, P6+, WrapUp? )
+	)
+}
+
+P6 = element level {
+	IdAttributes,
+	attribute class { 'para4' }?,
+	Num,
+    Content
+}
+
+Definition = element hcontainer {
+	attribute name { 'definition' },
+	IdAttributes,
+	attribute class { text }?,
+    (   Content |
+        ( Intro?, P3+, WrapUp? )
+    )
+}

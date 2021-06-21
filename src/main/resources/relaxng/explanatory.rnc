@@ -1,0 +1,27 @@
+
+namespace ukl = "http://www.legislation.gov.uk/namespaces/legislation"
+
+ExplanatoryNote = element blockContainer {
+    DeprecatedIdAttributes,
+    attribute class { 'explanatoryNote' },
+    Heading?,
+    Subheading?,
+    ( Blocks | ( P*, ExplanatoryNoteStructure+, P* ) )
+}
+
+EarlierOrders = element blockContainer {
+    DeprecatedIdAttributes,
+    attribute class { 'commencementHistory' | 'earlierOrders' },
+    Heading?,
+    Subheading?,
+    ( Blocks | ( P*, ExplanatoryNoteStructure+, P* ) )
+}
+
+ExplanatoryNoteStructure = element blockContainer {
+    attribute ukl:Name { text }?,
+    attribute class { text }?,
+    Num?,
+    Heading?,
+    ( Blocks | ( P*, ExplanatoryNoteStructure+, P* ) )
+}
+

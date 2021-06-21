@@ -1,0 +1,27 @@
+
+PrimaryDocType = ( 'ukpga' | 'ukla' | 'asp' | 'asc' | 'anaw' | 'mwa' | 'ukcm' | 'nia' | 'aosp' | 'aep' | 'aip' | 'apgb' | 'mnia' | 'apni' )
+
+PrimaryDraftDocType = ( 'ukdpb' )
+
+SecondaryDocType = ( 'uksi' | 'wsi' | 'ssi' | 'nisi' | 'nisr' | 'ukci' | 'ukmd' | 'ukmo' | 'uksro' | 'nisro' )
+
+SecondaryDraftDocType = ( 'ukdsi' | 'sdsi' | 'nidsr' )
+
+UKDocType = ( PrimaryDocType | SecondaryDocType )
+
+DraftDocType = ( PrimaryDraftDocType | SecondaryDraftDocType )
+
+EUDocType = ( 'eur' | 'eudn' | 'eudr' | 'eut' )
+
+DocType = ( UKDocType | EUDocType )
+
+# ids
+
+IdAttributes = (
+	attribute eId { xsd:NCName }?, # can make these xsd:ID when anyElement pattern is no longer needed
+	attribute GUID { xsd:token }?
+)
+
+DeprecatedIdAttributes = empty
+
+DeprecatedClassAttribute = empty
